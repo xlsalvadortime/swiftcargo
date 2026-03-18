@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SwiftCargo — Global Freight & Logistics</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy: #0a0f1e; --navy2: #111827; --steel: #1c2840;
+    --amber: #f5a623; --amber2: #e8921a;
+    --muted: #8a94a6; --white: #ffffff;
+    --border: rgba(245,166,35,0.15);
+    --green: #22c55e;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--navy); color: var(--white); font-family: 'DM Sans', sans-serif; overflow-x: hidden; }
+  body::before {
+    content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 9999;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.025;
+  }
+
+/* NAV */
+nav {
+position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+display: flex; align-items: center; justify-content: space-between;
+padding: 0 6vw; height: 72px;
+background: rgba(10,15,30,0.85); backdrop-filter: blur(16px);
+border-bottom: 1px solid var(–border); transition: background 0.3s;
+}
+.logo { font-family: ‘Bebas Neue’, sans-serif; font-size: 1.8rem; letter-spacing: 0.08em; color: var(–white); text-decoration: none; }
+.logo span { color: var(–amber); }
+.nav-links { display: flex; gap: 2.5rem; list-style: none; }
+.nav-links a { text-decoration: none; color: var(–muted); font-size: 0.875rem; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; transition: color 0.2s; }
+.nav-links a:hover { color: var(–amber); }
+.nav-cta { background: var(–amber) !important; color: var(–navy) !important; padding: 0.55rem 1.4rem; border-radius: 2px; font-weight: 600 !important; }
+.nav-cta:hover { background: var(–amber2) !important; }
+
+/* HERO */
+#hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 100px 6vw 80px; position: relative; overflow: hidden; }
+.hero-grid-bg { position: absolute; inset: 0; background-image: linear-gradient(rgba(245,166,35,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(245,166,35,0.04) 1px,transparent 1px); background-size: 60px 60px; mask-image: radial-gradient(ellipse 80% 80% at 50% 50%,black 20%,transparent 100%); }
+.hero-glow { position: absolute; width: 700px; height: 700px; background: radial-gradient(circle,rgba(245,166,35,0.12) 0%,transparent 70%); top: -150px; right: -100px; pointer-events: none; }
+.hero-glow2 { position: absolute; width: 500px; height: 500px; background: radial-gradient(circle,rgba(30,60,140,0.25) 0%,transparent 70%); bottom: -100px; left: -50px; pointer-events: none; }
+.hero-eyebrow { font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(–amber); font-weight: 600; display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.7s 0.2s forwards; }
+.hero-eyebrow::before { content: ‘’; display: block; width: 40px; height: 1px; background: var(–amber); }
+h1 { font-family: ‘Bebas Neue’, sans-serif; font-size: clamp(4rem,10vw,9rem); line-height: 0.92; letter-spacing: 0.02em; opacity: 0; animation: fadeUp 0.8s 0.35s forwards; }
+h1 .accent { color: var(–amber); font-family: ‘DM Serif Display’, serif; font-style: italic; }
+.hero-sub { max-width: 520px; margin-top: 2rem; font-size: 1.05rem; line-height: 1.7; color: var(–muted); opacity: 0; animation: fadeUp 0.8s 0.5s forwards; }
+.hero-actions { display: flex; gap: 1rem; margin-top: 3rem; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.8s 0.65s forwards; }
+.btn-primary { background: var(–amber); color: var(–navy); padding: 0.9rem 2.2rem; font-weight: 600; font-size: 0.95rem; border: none; cursor: pointer; border-radius: 2px; letter-spacing: 0.04em; text-transform: uppercase; transition: background 0.2s,transform 0.2s; text-decoration: none; display: inline-block; }
+.btn-primary:hover { background: var(–amber2); transform: translateY(-2px); }
+.btn-ghost { background: transparent; color: var(–white); padding: 0.9rem 2.2rem; font-weight: 500; font-size: 0.95rem; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; border-radius: 2px; letter-spacing: 0.04em; text-transform: uppercase; transition: border-color 0.2s,color 0.2s; text-decoration: none; display: inline-block; }
+.btn-ghost:hover { border-color: var(–amber); color: var(–amber); }
+.hero-stats { display: flex; gap: 3rem; margin-top: 5rem; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.8s 0.8s forwards; }
+.stat-num { font-family: ‘Bebas Neue’, sans-serif; font-size: 2.8rem; color: var(–white); line-height: 1; }
+.stat-num span { color: var(–amber); }
+.stat-label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(–muted); margin-top: 0.3rem; }
+
+/* SHARED */
+section { padding: 100px 6vw; position: relative; }
+.section-label { font-size: 0.75rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(–amber); font-weight: 600; display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+.section-label::before { content:’’; display:block; width:32px; height:1px; background:var(–amber); }
+.section-title { font-family: ‘Bebas Neue’, sans-serif; font-size: clamp(2.5rem,5vw,4.5rem); line-height: 1; letter-spacing: 0.02em; }
+.section-title em { font-family: ‘DM Serif Display’, serif; font-style: italic; color: var(–amber); }
+.amber-line { width: 60px; height: 2px; background: var(–amber); margin: 2rem 0; }
+
+/* TICKER */
+.ticker-wrap { overflow: hidden; background: var(–amber); padding: 0.6rem 0; }
+.ticker { display: flex; gap: 4rem; animation: ticker 28s linear infinite; white-space: nowrap; }
+.ticker-item { font-family: ‘Bebas Neue’, sans-serif; font-size: 0.95rem; color: var(–navy); letter-spacing: 0.15em; text-transform: uppercase; display: flex; align-items: center; gap: 1.5rem; }
+.ticker-item::after { content: ‘✦’; opacity: 0.4; }
+@keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+/* TRACKING */
+#tracking { background: var(–navy); }
+.tracking-inner { max-width: 860px; margin: 0 auto; text-align: center; }
+.tracking-inner .section-title { margin-bottom: 0.75rem; }
+.tracking-inner > p { color: var(–muted); margin-bottom: 3rem; font-size: 0.97rem; }
+.track-input-row { display: flex; border: 1px solid var(–border); background: var(–steel); overflow: hidden; transition: border-color 0.2s; margin-bottom: 1.5rem; }
+.track-input-row:focus-within { border-color: var(–amber); }
+.track-input-row input { flex: 1; background: transparent; border: none; outline: none; padding: 1.1rem 1.5rem; color: var(–white); font-family: ‘DM Sans’, sans-serif; font-size: 1rem; letter-spacing: 0.05em; }
+.track-input-row input::placeholder { color: var(–muted); }
+.track-btn { background: var(–amber); color: var(–navy); border: none; cursor: pointer; padding: 0 2rem; font-family: ‘DM Sans’, sans-serif; font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.08em; transition: background 0.2s; white-space: nowrap; }
+.track-btn:hover { background: var(–amber2); }
+
+#track-result { display: none; border: 1px solid var(–border); background: var(–navy2); text-align: left; }
+.track-result-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; padding: 1.5rem 2rem; border-bottom: 1px solid var(–border); }
+.track-id { font-family: ‘Bebas Neue’, sans-serif; font-size: 1.4rem; letter-spacing: 0.1em; }
+.track-id span { color: var(–amber); }
+.track-status-badge { padding: 0.35rem 1rem; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; border-radius: 2px; }
+.status-transit { background: rgba(59,130,246,0.15); color: #60a5fa; border: 1px solid rgba(59,130,246,0.3); }
+.status-delivered { background: rgba(34,197,94,0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
+.status-pending { background: rgba(249,115,22,0.15); color: #fb923c; border: 1px solid rgba(249,115,22,0.3); }
+
+.track-meta { display: grid; grid-template-columns: repeat(auto-fit,minmax(160px,1fr)); }
+.track-meta-item { padding: 1.25rem 2rem; border-right: 1px solid var(–border); border-bottom: 1px solid var(–border); }
+.track-meta-item:last-child { border-right: none; }
+.track-meta-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(–muted); margin-bottom: 0.3rem; }
+.track-meta-value { font-size: 0.9rem; font-weight: 600; }
+
+.track-progress-bar { padding: 1.5rem 2rem 0.5rem; }
+.progress-label { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(–muted); margin-bottom: 0.5rem; }
+.progress-track { height: 4px; background: var(–steel); border-radius: 2px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg,var(–amber),var(–green)); border-radius: 2px; transition: width 1.2s ease; }
+
+.track-timeline { padding: 1.5rem 2rem 2rem; }
+.timeline-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(–muted); margin-bottom: 1.5rem; }
+.timeline { display: flex; flex-direction: column; }
+.timeline-step { display: flex; gap: 1.25rem; padding-bottom: 1.5rem; }
+.timeline-step:last-child { padding-bottom: 0; }
+.step-line-wrap { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+.step-dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; }
+.step-dot.done { background: var(–green); box-shadow: 0 0 8px rgba(34,197,94,0.4); }
+.step-dot.active { background: var(–amber); box-shadow: 0 0 10px rgba(245,166,35,0.5); animation: dotPulse 1.5s infinite; }
+.step-dot.pending { background: var(–steel); border: 1px solid var(–muted); }
+.step-connector { width: 1px; flex: 1; min-height: 20px; margin: 4px 0; }
+.step-connector.done { background: var(–green); }
+.step-connector.pending { background: var(–border); }
+@keyframes dotPulse { 0%,100%{box-shadow:0 0 6px rgba(245,166,35,0.4)} 50%{box-shadow:0 0 14px rgba(245,166,35,0.8)} }
+.step-body { flex: 1; }
+.step-event { font-size: 0.9rem; font-weight: 600; }
+.step-event.dim { color: var(–muted); font-weight: 400; }
+.step-location { font-size: 0.8rem; color: var(–muted); margin-top: 0.2rem; }
+.step-time { font-size: 0.75rem; color: var(–muted); margin-top: 0.1rem; }
+.demo-hints { font-size: 0.78rem; color: var(–muted); margin-top: 1rem; }
+.demo-hints span { color: var(–amber); cursor: pointer; }
+.demo-hints span:hover { text-decoration: underline; }
+
+/* SERVICES */
+#services { background: var(–navy2); }
+.services-header { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 2rem; margin-bottom: 4rem; }
+.services-header p { max-width: 400px; color: var(–muted); line-height: 1.7; }
+.services-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(300px,1fr)); gap: 1.5px; background: var(–border); border: 1px solid var(–border); }
+.service-card { background: var(–navy2); padding: 2.5rem; position: relative; overflow: hidden; transition: background 0.3s; }
+.service-card::before { content:’’; position:absolute; inset:0; background:linear-gradient(135deg,rgba(245,166,35,0.05) 0%,transparent 60%); opacity:0; transition:opacity 0.3s; }
+.service-card:hover { background: var(–steel); }
+.service-card:hover::before { opacity: 1; }
+.service-icon { width:52px; height:52px; border:1px solid var(–border); display:flex; align-items:center; justify-content:center; margin-bottom:1.5rem; font-size:1.4rem; transition:border-color 0.3s; }
+.service-card:hover .service-icon { border-color: var(–amber); }
+.service-num { position:absolute; top:1.5rem; right:2rem; font-family:‘Bebas Neue’,sans-serif; font-size:3rem; color:rgba(255,255,255,0.04); line-height:1; }
+.service-card h3 { font-size:1.15rem; font-weight:600; margin-bottom:0.75rem; }
+.service-card p { color:var(–muted); font-size:0.9rem; line-height:1.7; }
+.service-arrow { display:inline-flex; align-items:center; gap:0.5rem; margin-top:1.5rem; font-size:0.8rem; font-weight:600; color:var(–amber); text-transform:uppercase; letter-spacing:0.1em; opacity:0; transform:translateX(-8px); transition:opacity 0.3s,transform 0.3s; }
+.service-card:hover .service-arrow { opacity:1; transform:translateX(0); }
+
+/* ABOUT */
+#about { background: var(–navy); }
+.about-inner { display:grid; grid-template-columns:1fr 1fr; gap:6rem; align-items:center; }
+.about-visual { position:relative; }
+.about-img-frame { width:100%; aspect-ratio:4/5; background:var(–steel); border:1px solid var(–border); position:relative; overflow:hidden; }
+.about-img-frame .world-map { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; opacity:0.15; font-size:12rem; }
+.about-img-frame::after { content:’’; position:absolute; inset:0; background:linear-gradient(to top,var(–navy) 0%,transparent 50%); }
+.about-badge { position:absolute; bottom:-1.5rem; right:-1.5rem; background:var(–amber); color:var(–navy); padding:1.5rem; text-align:center; font-family:‘Bebas Neue’,sans-serif; }
+.about-badge .big { font-size:2.8rem; line-height:1; display:block; }
+.about-badge .small { font-size:0.75rem; letter-spacing:0.1em; }
+.about-content .section-title { margin-bottom:1.5rem; }
+.about-content p { color:var(–muted); line-height:1.8; margin-bottom:1.5rem; font-size:0.97rem; }
+.about-features { display:flex; flex-direction:column; gap:1rem; margin:2rem 0; }
+.about-feature { display:flex; align-items:flex-start; gap:1rem; padding:1.25rem; border:1px solid var(–border); background:var(–navy2); transition:border-color 0.2s; }
+.about-feature:hover { border-color:rgba(245,166,35,0.35); }
+.feat-icon { color:var(–amber); font-size:1.2rem; margin-top:0.1rem; flex-shrink:0; }
+.feat-text strong { display:block; font-size:0.9rem; margin-bottom:0.2rem; }
+.feat-text span { font-size:0.82rem; color:var(–muted); }
+.route-svg { width:100%; height:100%; position:absolute; }
+.route-path { fill:none; stroke:var(–amber); stroke-width:1; stroke-dasharray:6 4; opacity:0.4; }
+.route-dot { fill:var(–amber); }
+.pulse-ring { fill:none; stroke:var(–amber); stroke-width:1; opacity:0; animation:pulse 2.5s infinite; }
+@keyframes pulse { 0%{r:4px;opacity:0.6} 100%{r:16px;opacity:0} }
+
+/* CONTACT */
+#contact { background: var(–navy2); }
+.contact-inner { display:grid; grid-template-columns:1fr 1.2fr; gap:6rem; align-items:start; }
+.contact-info .section-title { margin-bottom:1.5rem; }
+.contact-info > p { color:var(–muted); line-height:1.8; margin-bottom:2.5rem; }
+.contact-details { display:flex; flex-direction:column; gap:1.25rem; }
+.contact-detail { display:flex; align-items:center; gap:1rem; padding-bottom:1.25rem; border-bottom:1px solid var(–border); }
+.detail-icon { width:40px; height:40px; border:1px solid var(–border); display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0; color:var(–amber); }
+.detail-label { font-size:0.72rem; text-transform:uppercase; letter-spacing:0.12em; color:var(–muted); }
+.detail-value { font-size:0.92rem; font-weight:500; margin-top:0.1rem; }
+.quote-form { background:var(–steel); padding:2.5rem; border:1px solid var(–border); }
+.form-title { font-family:‘Bebas Neue’,sans-serif; font-size:1.6rem; letter-spacing:0.05em; margin-bottom:0.5rem; }
+.form-sub { font-size:0.85rem; color:var(–muted); margin-bottom:2rem; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+.form-group { display:flex; flex-direction:column; gap:0.4rem; margin-bottom:1.1rem; }
+.form-group label { font-size:0.75rem; text-transform:uppercase; letter-spacing:0.1em; color:var(–muted); font-weight:500; }
+.form-group input,.form-group select,.form-group textarea { background:var(–navy); color:var(–white); border:1px solid var(–border); padding:0.75rem 1rem; font-family:‘DM Sans’,sans-serif; font-size:0.9rem; outline:none; border-radius:0; transition:border-color 0.2s; -webkit-appearance:none; }
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus { border-color:var(–amber); }
+.form-group select option { background:var(–navy); }
+.form-group textarea { resize:vertical; min-height:90px; }
+.form-submit { width:100%; background:var(–amber); color:var(–navy); border:none; padding:1rem; font-family:‘DM Sans’,sans-serif; font-size:0.95rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; margin-top:0.5rem; transition:background 0.2s,transform 0.2s; }
+.form-submit:hover { background:var(–amber2); transform:translateY(-1px); }
+.form-note { text-align:center; font-size:0.75rem; color:var(–muted); margin-top:1rem; }
+
+/* FOOTER */
+footer { background:var(–navy); border-top:1px solid var(–border); padding:3rem 6vw; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; }
+.footer-links { display:flex; gap:2rem; flex-wrap:wrap; }
+.footer-links a { color:var(–muted); text-decoration:none; font-size:0.82rem; transition:color 0.2s; }
+.footer-links a:hover { color:var(–amber); }
+.footer-copy { font-size:0.78rem; color:var(–muted); }
+
+/* CHATBOT */
+.chat-launcher {
+position: fixed; bottom: 2rem; right: 2rem; z-index: 1000;
+width: 60px; height: 60px; border-radius: 50%;
+background: var(–amber); border: none; cursor: pointer;
+box-shadow: 0 6px 28px rgba(245,166,35,0.45);
+display: flex; align-items: center; justify-content: center;
+font-size: 1.5rem; transition: transform 0.2s, background 0.2s;
+}
+.chat-launcher:hover { transform: scale(1.1); background: var(–amber2); }
+.chat-unread {
+position: absolute; top: -2px; right: -2px;
+width: 20px; height: 20px; border-radius: 50%;
+background: #ef4444; border: 2px solid var(–navy);
+font-size: 0.65rem; font-weight: 700; color: #fff;
+display: flex; align-items: center; justify-content: center;
+}
+
+.chat-window {
+position: fixed; bottom: 6.5rem; right: 2rem; z-index: 1000;
+width: 390px; max-height: 570px;
+background: var(–navy2); border: 1px solid var(–border);
+display: flex; flex-direction: column;
+box-shadow: 0 24px 64px rgba(0,0,0,0.55);
+transform: translateY(20px) scale(0.95); opacity: 0;
+pointer-events: none; transition: all 0.28s cubic-bezier(0.34,1.56,0.64,1);
+}
+.chat-window.open { transform: translateY(0) scale(1); opacity: 1; pointer-events: all; }
+
+.chat-header { background: var(–steel); padding: 1rem 1.25rem; display: flex; align-items: center; gap: 0.75rem; border-bottom: 1px solid var(–border); flex-shrink: 0; }
+.chat-avatar { width: 38px; height: 38px; background: var(–amber); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+.chat-header-info { flex: 1; }
+.chat-header-name { font-weight: 600; font-size: 0.92rem; }
+.chat-header-status { font-size: 0.72rem; color: #4ade80; display: flex; align-items: center; gap: 0.35rem; margin-top: 0.1rem; }
+.chat-header-status::before { content:’’; width:7px; height:7px; border-radius:50%; background:#4ade80; display:block; flex-shrink:0; }
+.chat-close { background:none; border:none; color:var(–muted); cursor:pointer; font-size:1.1rem; padding:0.25rem; transition:color 0.2s; }
+.chat-close:hover { color:var(–white); }
+
+.chat-messages { flex: 1; overflow-y: auto; padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem; scrollbar-width: thin; scrollbar-color: var(–steel) transparent; }
+.chat-messages::-webkit-scrollbar { width: 4px; }
+.chat-messages::-webkit-scrollbar-thumb { background: var(–steel); border-radius: 2px; }
+
+.chat-msg { display: flex; gap: 0.6rem; align-items: flex-end; max-width: 92%; }
+.chat-msg.user { flex-direction: row-reverse; align-self: flex-end; }
+.msg-avatar { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
+.bot-av { background: var(–amber); color: var(–navy); }
+.user-av { background: var(–steel); color: var(–muted); }
+.msg-bubble { padding: 0.65rem 0.95rem; font-size: 0.87rem; line-height: 1.55; max-width: 100%; }
+.bot-bubble { background: var(–steel); color: var(–white); border: 1px solid var(–border); border-bottom-left-radius: 0; }
+.user-bubble { background: var(–amber); color: var(–navy); font-weight: 500; border-bottom-right-radius: 0; }
+
+.typing-indicator { display: flex; gap: 4px; padding: 0.65rem 0.9rem; background: var(–steel); border: 1px solid var(–border); width: fit-content; }
+.typing-dot { width: 6px; height: 6px; border-radius: 50%; background: var(–muted); animation: typingBounce 1.2s infinite; }
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typingBounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-5px)} }
+
+.chat-quick-replies { padding: 0 1.25rem 0.75rem; display: flex; gap: 0.4rem; flex-wrap: wrap; flex-shrink: 0; }
+.quick-reply { padding: 0.35rem 0.8rem; font-size: 0.75rem; border: 1px solid var(–border); background: transparent; color: var(–amber); cursor: pointer; border-radius: 20px; font-family: ‘DM Sans’, sans-serif; transition: all 0.2s; white-space: nowrap; }
+.quick-reply:hover { background: var(–amber); color: var(–navy); }
+
+.chat-input-area { padding: 0.75rem 1.25rem 1rem; border-top: 1px solid var(–border); display: flex; gap: 0.5rem; flex-shrink: 0; }
+.chat-input { flex: 1; background: var(–steel); border: 1px solid var(–border); color: var(–white); padding: 0.65rem 0.9rem; font-family: ‘DM Sans’, sans-serif; font-size: 0.875rem; outline: none; border-radius: 2px; transition: border-color 0.2s; }
+.chat-input:focus { border-color: var(–amber); }
+.chat-input::placeholder { color: var(–muted); }
+.chat-send { background: var(–amber); color: var(–navy); border: none; cursor: pointer; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; font-size: 1rem; border-radius: 2px; transition: background 0.2s; flex-shrink: 0; }
+.chat-send:hover { background: var(–amber2); }
+.chat-send:disabled { background: var(–steel); color: var(–muted); cursor: not-allowed; }
+
+/* ANIMATIONS */
+@keyframes fadeUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+.reveal { opacity:0; transform:translateY(30px); transition:opacity 0.7s,transform 0.7s; }
+.reveal.visible { opacity:1; transform:translateY(0); }
+
+/* MOBILE */
+@media (max-width: 768px) {
+.nav-links { display: none; }
+h1 { font-size: 4rem; }
+.about-inner, .contact-inner { grid-template-columns: 1fr; gap: 3rem; }
+.about-badge { right: 0; }
+.form-row { grid-template-columns: 1fr; }
+.hero-stats { gap: 1.5rem; }
+section { padding: 70px 5vw; }
+.chat-window { width: calc(100vw - 2rem); right: 1rem; bottom: 5.5rem; }
+.track-meta { grid-template-columns: 1fr 1fr; }
+}
+</style>
+
+</head>
+<body>
+
+<!-- NAV -->
+
+<nav id="main-nav">
+  <a href="#" class="logo">Swift<span>Cargo</span></a>
+  <ul class="nav-links">
+    <li><a href="#tracking">Track</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#contact" class="nav-cta">Get a Quote</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+
+<section id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <p class="hero-eyebrow">Trusted Global Freight Solutions</p>
+  <h1>Move the<br><span class="accent">World</span><br>Forward</h1>
+  <p class="hero-sub">SwiftCargo delivers end-to-end logistics — air, sea, land, and rail freight — connecting your business to every corner of the globe with speed and precision.</p>
+  <div class="hero-actions">
+    <a href="#tracking" class="btn-primary">Track Shipment</a>
+    <a href="#contact" class="btn-ghost">Request a Quote</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-item"><div class="stat-num">180<span>+</span></div><div class="stat-label">Countries Served</div></div>
+    <div class="stat-item"><div class="stat-num">50K<span>+</span></div><div class="stat-label">Shipments/Year</div></div>
+    <div class="stat-item"><div class="stat-num">98<span>%</span></div><div class="stat-label">On-Time Delivery</div></div>
+    <div class="stat-item"><div class="stat-num">24<span>/7</span></div><div class="stat-label">Live Tracking</div></div>
+  </div>
+</section>
+
+<!-- TICKER -->
+
+<div class="ticker-wrap">
+  <div class="ticker">
+    <span class="ticker-item">Air Freight</span><span class="ticker-item">Sea Freight</span><span class="ticker-item">Land Transport</span><span class="ticker-item">Rail Freight</span><span class="ticker-item">Warehousing</span><span class="ticker-item">Customs Clearance</span><span class="ticker-item">Project Cargo</span><span class="ticker-item">Cold Chain</span>
+    <span class="ticker-item">Air Freight</span><span class="ticker-item">Sea Freight</span><span class="ticker-item">Land Transport</span><span class="ticker-item">Rail Freight</span><span class="ticker-item">Warehousing</span><span class="ticker-item">Customs Clearance</span><span class="ticker-item">Project Cargo</span><span class="ticker-item">Cold Chain</span>
+  </div>
+</div>
+
+<!-- TRACKING -->
+
+<section id="tracking">
+  <div class="tracking-inner reveal">
+    <p class="section-label" style="justify-content:center">Shipment Tracking</p>
+    <h2 class="section-title">Track Your <em>Cargo</em></h2>
+    <p>Enter your tracking number below to get real-time updates on location and delivery status.</p>
+    <div class="track-input-row">
+      <input type="text" id="trackInput" placeholder="Enter tracking number — e.g. SC-2024-78432" maxlength="20"/>
+      <button class="track-btn" onclick="trackShipment()">Track Now →</button>
+    </div>
+    <div id="track-result"></div>
+    <p class="demo-hints">Try demo codes: <span onclick="demoTrack('SC-2024-78432')">SC-2024-78432</span> · <span onclick="demoTrack('SC-2024-91205')">SC-2024-91205</span> · <span onclick="demoTrack('SC-2024-33871')">SC-2024-33871</span></p>
+  </div>
+</section>
+
+<!-- SERVICES -->
+
+<section id="services">
+  <div class="services-header reveal">
+    <div>
+      <p class="section-label">What We Do</p>
+      <h2 class="section-title">Our <em>Core</em><br>Services</h2>
+    </div>
+    <p>From single parcel to bulk cargo — comprehensive freight solutions tailored to your needs, timeline, and budget.</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card reveal"><div class="service-num">01</div><div class="service-icon">✈</div><h3>Air Freight</h3><p>Express and standard air cargo services to over 180 destinations. Ideal for time-sensitive, high-value, or perishable shipments.</p><span class="service-arrow">Learn More →</span></div>
+    <div class="service-card reveal"><div class="service-num">02</div><div class="service-icon">🚢</div><h3>Sea Freight</h3><p>FCL and LCL ocean freight via the world's leading carrier networks. Cost-effective solutions for bulk and oversized cargo.</p><span class="service-arrow">Learn More →</span></div>
+    <div class="service-card reveal"><div class="service-num">03</div><div class="service-icon">🚛</div><h3>Road Transport</h3><p>Full-load and groupage trucking across all major road networks. Door-to-door delivery with real-time GPS tracking.</p><span class="service-arrow">Learn More →</span></div>
+    <div class="service-card reveal"><div class="service-num">04</div><div class="service-icon">🚂</div><h3>Rail Freight</h3><p>Eco-efficient rail cargo connecting Asia, Europe, and the Middle East. A smart middle-ground between speed and cost.</p><span class="service-arrow">Learn More →</span></div>
+    <div class="service-card reveal"><div class="service-num">05</div><div class="service-icon">🏭</div><h3>Warehousing</h3><p>Secure, climate-controlled storage facilities in strategic hubs worldwide. With inventory management and order fulfillment.</p><span class="service-arrow">Learn More →</span></div>
+    <div class="service-card reveal"><div class="service-num">06</div><div class="service-icon">📋</div><h3>Customs Clearance</h3><p>End-to-end customs brokerage and compliance. Our experts navigate complex regulations so your cargo clears without delays.</p><span class="service-arrow">Learn More →</span></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+
+<section id="about">
+  <div class="about-inner">
+    <div class="about-visual reveal">
+      <div class="about-img-frame">
+        <div class="world-map">🌐</div>
+        <svg class="route-svg" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid meet">
+          <path class="route-path" d="M80,150 Q200,80 320,200"/>
+          <path class="route-path" d="M60,300 Q180,200 350,280"/>
+          <path class="route-path" d="M100,400 Q230,320 360,380"/>
+          <circle class="route-dot" cx="80" cy="150" r="4"/><circle class="route-dot" cx="320" cy="200" r="4"/>
+          <circle class="route-dot" cx="60" cy="300" r="4"/><circle class="route-dot" cx="350" cy="280" r="4"/>
+          <circle class="route-dot" cx="100" cy="400" r="4"/><circle class="route-dot" cx="360" cy="380" r="4"/>
+          <circle class="pulse-ring" cx="320" cy="200" r="4" style="animation-delay:0s"/>
+          <circle class="pulse-ring" cx="350" cy="280" r="4" style="animation-delay:0.9s"/>
+          <circle class="pulse-ring" cx="360" cy="380" r="4" style="animation-delay:1.8s"/>
+        </svg>
+      </div>
+      <div class="about-badge"><span class="big">15+</span><span class="small">Years Experience</span></div>
+    </div>
+    <div class="about-content reveal">
+      <p class="section-label">About SwiftCargo</p>
+      <h2 class="section-title">Built on<br><em>Trust</em> &<br>Precision</h2>
+      <div class="amber-line"></div>
+      <p>Founded in 2009, SwiftCargo has grown from a regional courier into a full-service international freight forwarder operating across six continents.</p>
+      <p>Every shipment receives the same dedicated attention. Our 800+ logistics specialists work around the clock to keep your supply chain moving.</p>
+      <div class="about-features">
+        <div class="about-feature"><span class="feat-icon">⚡</span><div class="feat-text"><strong>Real-Time Shipment Tracking</strong><span>Monitor your cargo 24/7 with our live tracking platform and instant notifications.</span></div></div>
+        <div class="about-feature"><span class="feat-icon">🛡</span><div class="feat-text"><strong>Full Cargo Insurance</strong><span>Every shipment protected with comprehensive coverage and fast claims processing.</span></div></div>
+        <div class="about-feature"><span class="feat-icon">🌍</span><div class="feat-text"><strong>Global Partner Network</strong><span>Strategic alliances with 300+ partners across 180 countries for seamless last-mile delivery.</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+
+<section id="contact">
+  <div class="contact-inner">
+    <div class="contact-info reveal">
+      <p class="section-label">Get In Touch</p>
+      <h2 class="section-title">Request a<br><em>Free</em> Quote</h2>
+      <div class="amber-line"></div>
+      <p>Tell us about your shipment and we'll get back within 2 business hours with a tailored quote and delivery timeline.</p>
+      <div class="contact-details">
+        <div class="contact-detail"><div class="detail-icon">📞</div><div><div class="detail-label">Phone</div><div class="detail-value">+1 (800) 795-2460</div></div></div>
+        <div class="contact-detail"><div class="detail-icon">✉</div><div><div class="detail-label">Email</div><div class="detail-value"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="364743594253457645415f504255574451591855595b">[email&#160;protected]</a></div></div></div>
+        <div class="contact-detail"><div class="detail-icon">📍</div><div><div class="detail-label">Headquarters</div><div class="detail-value">100 Trade Center Dr, Miami, FL 33131</div></div></div>
+        <div class="contact-detail"><div class="detail-icon">🕐</div><div><div class="detail-label">Hours</div><div class="detail-value">Mon–Fri 8AM–8PM · Emergency 24/7</div></div></div>
+      </div>
+    </div>
+    <div class="quote-form reveal">
+      <h3 class="form-title">Shipment Quote</h3>
+      <p class="form-sub">Fill in the details below for a fast, accurate quote.</p>
+      <div class="form-row">
+        <div class="form-group"><label>First Name</label><input type="text" placeholder="John"/></div>
+        <div class="form-group"><label>Last Name</label><input type="text" placeholder="Doe"/></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Email Address</label><input type="email" placeholder="john@company.com"/></div>
+        <div class="form-group"><label>Phone Number</label><input type="tel" placeholder="+1 000 000 0000"/></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Origin Country</label><input type="text" placeholder="e.g. United States"/></div>
+        <div class="form-group"><label>Destination Country</label><input type="text" placeholder="e.g. Germany"/></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Freight Type</label><select><option value="">Select service...</option><option>Air Freight</option><option>Sea Freight</option><option>Road Transport</option><option>Rail Freight</option><option>Warehousing</option></select></div>
+        <div class="form-group"><label>Cargo Weight (kg)</label><input type="number" placeholder="e.g. 500"/></div>
+      </div>
+      <div class="form-group"><label>Additional Notes</label><textarea placeholder="Describe your cargo, special requirements, preferred timeline..."></textarea></div>
+      <button class="form-submit" onclick="handleSubmit()">Send Quote Request →</button>
+      <p class="form-note">🔒 Your data is secure. We respond within 2 business hours.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+
+<footer>
+  <a href="#" class="logo">Swift<span>Cargo</span></a>
+  <nav class="footer-links">
+    <a href="#tracking">Track Shipment</a>
+    <a href="#services">Services</a>
+    <a href="#about">About Us</a>
+    <a href="#contact">Contact</a>
+    <a href="#">Privacy Policy</a>
+  </nav>
+  <p class="footer-copy">© 2025 SwiftCargo Inc. All rights reserved.</p>
+</footer>
+
+<!-- CHAT LAUNCHER -->
+
+<button class="chat-launcher" onclick="toggleChat()" id="chatLauncher" title="Chat with SwiftBot">
+  <span id="chatIcon">💬</span>
+  <span class="chat-unread" id="chatUnread">1</span>
+</button>
+
+<!-- CHAT WINDOW -->
+
+<div class="chat-window" id="chatWindow">
+  <div class="chat-header">
+    <div class="chat-avatar">🚀</div>
+    <div class="chat-header-info">
+      <div class="chat-header-name">SwiftBot</div>
+      <div class="chat-header-status">Online — AI Logistics Assistant</div>
+    </div>
+    <button class="chat-close" onclick="toggleChat()">✕</button>
+  </div>
+  <div class="chat-messages" id="chatMessages"></div>
+  <div class="chat-quick-replies" id="quickReplies">
+    <button class="quick-reply" onclick="sendQuick('Track my shipment')">📦 Track shipment</button>
+    <button class="quick-reply" onclick="sendQuick('Get a price quote')">💰 Get a quote</button>
+    <button class="quick-reply" onclick="sendQuick('What services do you offer?')">🚢 Our services</button>
+    <button class="quick-reply" onclick="sendQuick('How do I contact support?')">📞 Contact</button>
+  </div>
+  <div class="chat-input-area">
+    <input type="text" class="chat-input" id="chatInput" placeholder="Ask anything about your shipment…" onkeydown="if(event.key==='Enter')sendMessage()"/>
+    <button class="chat-send" id="sendBtn" onclick="sendMessage()">➤</button>
+  </div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+
+/* ═══════════ TRACKING DATA ═══════════ */
+const SHIPMENTS = {
+‘SC-2024-78432’: {
+id:‘SC-2024-78432’, statusKey:‘transit’, statusLabel:‘In Transit’,
+origin:‘New York, USA’, dest:‘Frankfurt, Germany’,
+service:‘Air Freight’, weight:‘340 kg’, eta:‘Mar 19, 2026’, progress:65,
+events:[
+{label:‘Shipment Picked Up’,loc:‘JFK Warehouse, New York’,time:‘Mar 14, 09:12’,done:true},
+{label:‘Departed Origin Facility’,loc:‘JFK International Airport’,time:‘Mar 14, 23:45’,done:true},
+{label:‘Arrived at Transit Hub’,loc:‘Heathrow Airport, London’,time:‘Mar 15, 18:30’,done:true},
+{label:‘Customs Clearance In Progress’,loc:‘Frankfurt Airport, Germany’,time:‘Mar 16, 08:00’,done:false,active:true},
+{label:‘Out for Delivery’,loc:‘Frankfurt Distribution Center’,time:‘Estimated Mar 18’,done:false},
+{label:‘Delivered’,loc:‘Frankfurt, Germany’,time:‘Estimated Mar 19’,done:false},
+]
+},
+‘SC-2024-91205’: {
+id:‘SC-2024-91205’, statusKey:‘delivered’, statusLabel:‘Delivered’,
+origin:‘Shanghai, China’, dest:‘Los Angeles, USA’,
+service:‘Sea Freight (FCL)’, weight:‘4,200 kg’, eta:‘Delivered Mar 10, 2026’, progress:100,
+events:[
+{label:‘Received at Port’,loc:‘Port of Shanghai’,time:‘Feb 18, 10:00’,done:true},
+{label:‘Vessel Departed’,loc:‘Shanghai, China’,time:‘Feb 20, 06:00’,done:true},
+{label:‘Vessel In Transit’,loc:‘Pacific Ocean’,time:‘Feb 28, 14:00’,done:true},
+{label:‘Arrived at Destination Port’,loc:‘Port of Los Angeles’,time:‘Mar 9, 07:30’,done:true},
+{label:‘Customs Cleared’,loc:‘Los Angeles, CA’,time:‘Mar 9, 16:00’,done:true},
+{label:‘✓ Delivered Successfully’,loc:‘Los Angeles, CA’,time:‘Mar 10, 11:45’,done:true},
+]
+},
+‘SC-2024-33871’: {
+id:‘SC-2024-33871’, statusKey:‘pending’, statusLabel:‘Processing’,
+origin:‘Dubai, UAE’, dest:‘Mumbai, India’,
+service:‘Road Transport’, weight:‘1,100 kg’, eta:‘Mar 22, 2026’, progress:15,
+events:[
+{label:‘Order Confirmed’,loc:‘SwiftCargo Dubai Hub’,time:‘Mar 17, 09:00’,done:true},
+{label:‘Awaiting Pickup’,loc:‘Dubai Logistics Zone’,time:‘Scheduled Mar 18’,done:false,active:true},
+{label:‘In Transit — Border Crossing’,loc:‘Dubai → Oman Border’,time:‘Estimated Mar 19’,done:false},
+{label:‘Arrived Destination Country’,loc:‘Mumbai Port Area’,time:‘Estimated Mar 21’,done:false},
+{label:‘Delivered’,loc:‘Mumbai, India’,time:‘Estimated Mar 22’,done:false},
+]
+}
+};
+
+const STATUS_CLASS = {transit:‘status-transit’,delivered:‘status-delivered’,pending:‘status-pending’};
+
+function demoTrack(id) {
+document.getElementById(‘trackInput’).value = id;
+trackShipment();
+}
+
+function trackShipment() {
+const raw = document.getElementById(‘trackInput’).value.trim().toUpperCase();
+const result = document.getElementById(‘track-result’);
+const d = SHIPMENTS[raw];
+
+if (!d) {
+result.style.display = ‘block’;
+result.innerHTML = `<div style="padding:2.5rem;text-align:center"><div style="font-size:2.5rem;margin-bottom:1rem">🔍</div><div style="font-weight:600;margin-bottom:0.5rem">Tracking Number Not Found</div><div style="font-size:0.85rem;color:var(--muted)">Please check the number and try again.<br>Demo: <span style="color:var(--amber);cursor:pointer" onclick="demoTrack('SC-2024-78432')">SC-2024-78432</span></div></div>`;
+return;
+}
+
+const stepsHTML = d.events.map((e,i) => {
+const isLast = i === d.events.length-1;
+const dc = e.done ? ‘done’ : (e.active ? ‘active’ : ‘pending’);
+const cc = e.done ? ‘done’ : ‘pending’;
+return `<div class="timeline-step"> <div class="step-line-wrap"> <div class="step-dot ${dc}"></div> ${!isLast ? `<div class="step-connector ${cc}"></div>` : ''} </div> <div class="step-body"> <div class="step-event ${!e.done&&!e.active?'dim':''}">${e.label}</div> <div class="step-location">${e.loc}</div> <div class="step-time">${e.time}</div> </div> </div>`;
+}).join(’’);
+
+result.style.display = ‘block’;
+result.innerHTML = ` <div class="track-result-header"> <div class="track-id">Tracking # <span>${d.id}</span></div> <div class="track-status-badge ${STATUS_CLASS[d.statusKey]}">${d.statusLabel}</div> </div> <div class="track-meta"> <div class="track-meta-item"><div class="track-meta-label">From</div><div class="track-meta-value">${d.origin}</div></div> <div class="track-meta-item"><div class="track-meta-label">To</div><div class="track-meta-value">${d.dest}</div></div> <div class="track-meta-item"><div class="track-meta-label">Service</div><div class="track-meta-value">${d.service}</div></div> <div class="track-meta-item"><div class="track-meta-label">Weight</div><div class="track-meta-value">${d.weight}</div></div> <div class="track-meta-item" style="grid-column:1/-1;border-right:none"><div class="track-meta-label">Estimated Delivery</div><div class="track-meta-value" style="color:var(--amber)">${d.eta}</div></div> </div> <div class="track-progress-bar"> <div class="progress-label"><span>Shipment Progress</span><span>${d.progress}%</span></div> <div class="progress-track"><div class="progress-fill" id="pFill" style="width:0%"></div></div> </div> <div class="track-timeline"> <div class="timeline-title">Tracking History</div> <div class="timeline">${stepsHTML}</div> </div>`;
+
+setTimeout(() => { const f = document.getElementById(‘pFill’); if(f) f.style.width = d.progress+’%’; }, 120);
+result.scrollIntoView({behavior:‘smooth’,block:‘nearest’});
+}
+
+document.getElementById(‘trackInput’).addEventListener(‘keydown’, e => { if(e.key===‘Enter’) trackShipment(); });
+
+/* ═══════════ CHATBOT ═══════════ */
+let chatOpen = false;
+let chatHistory = [];
+let botBusy = false;
+
+const SYS = `You are SwiftBot, a helpful, friendly AI assistant for SwiftCargo — a global freight & logistics company. Keep replies concise and warm. Use occasional emojis.
+
+SwiftCargo info:
+
+- Services: Air Freight, Sea Freight (FCL/LCL), Road Transport, Rail Freight, Warehousing, Customs Clearance
+- Contact: +1 (800) 795-2460 | quotes@swiftcargo.com | 100 Trade Center Dr, Miami FL
+- Hours: Mon–Fri 8AM–8PM, emergency 24/7
+- 180+ countries, 50,000+ shipments/year, 98% on-time delivery, 15+ years experience
+
+Demo shipments (for tracking questions):
+
+- SC-2024-78432: Air Freight, New York → Frankfurt, In Transit (customs clearance), ETA Mar 19
+- SC-2024-91205: Sea Freight, Shanghai → Los Angeles, DELIVERED Mar 10
+- SC-2024-33871: Road Transport, Dubai → Mumbai, Processing/Awaiting pickup, ETA Mar 22
+
+If asked to track, provide the status from above or suggest they use the tracking tool on the page.`;
+
+function toggleChat() {
+chatOpen = !chatOpen;
+document.getElementById(‘chatWindow’).classList.toggle(‘open’, chatOpen);
+document.getElementById(‘chatIcon’).textContent = chatOpen ? ‘✕’ : ‘💬’;
+if (chatOpen) {
+document.getElementById(‘chatUnread’).style.display = ‘none’;
+if (!chatHistory.length) initChat();
+setTimeout(() => document.getElementById(‘chatInput’).focus(), 300);
+} else {
+document.getElementById(‘chatIcon’).textContent = ‘💬’;
+}
+}
+
+function initChat() {
+addBot(“👋 Hey there! I’m **SwiftBot**, SwiftCargo’s AI assistant.\n\nI can help you track shipments, get freight quotes, learn about our services, or connect you with our team. What can I help you with?”);
+}
+
+function esc(t) { return t.replace(/&/g,’&’).replace(/</g,’<’).replace(/>/g,’>’); }
+function fmt(t) { return esc(t).replace(/**(.+?)**/g,’<strong>$1</strong>’).replace(/\n/g,’<br>’); }
+
+function addBot(text) {
+const msgs = document.getElementById(‘chatMessages’);
+const d = document.createElement(‘div’);
+d.className = ‘chat-msg bot’;
+d.innerHTML = `<div class="msg-avatar bot-av">🚀</div><div class="msg-bubble bot-bubble">${fmt(text)}</div>`;
+msgs.appendChild(d);
+msgs.scrollTop = msgs.scrollHeight;
+}
+
+function addUser(text) {
+const msgs = document.getElementById(‘chatMessages’);
+const d = document.createElement(‘div’);
+d.className = ‘chat-msg user’;
+d.innerHTML = `<div class="msg-bubble user-bubble">${esc(text)}</div><div class="msg-avatar user-av">👤</div>`;
+msgs.appendChild(d);
+msgs.scrollTop = msgs.scrollHeight;
+}
+
+function showTyping() {
+const msgs = document.getElementById(‘chatMessages’);
+const d = document.createElement(‘div’);
+d.className = ‘chat-msg bot’; d.id = ‘typing’;
+d.innerHTML = `<div class="msg-avatar bot-av">🚀</div><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`;
+msgs.appendChild(d); msgs.scrollTop = msgs.scrollHeight;
+}
+
+function removeTyping() { const e = document.getElementById(‘typing’); if(e) e.remove(); }
+
+async function sendMessage() {
+const inp = document.getElementById(‘chatInput’);
+const txt = inp.value.trim();
+if (!txt || botBusy) return;
+inp.value = ‘’;
+document.getElementById(‘quickReplies’).style.display = ‘none’;
+addUser(txt);
+chatHistory.push({role:‘user’,content:txt});
+await reply();
+}
+
+function sendQuick(t) { document.getElementById(‘chatInput’).value = t; sendMessage(); }
+
+async function reply() {
+botBusy = true;
+document.getElementById(‘sendBtn’).disabled = true;
+showTyping();
+try {
+const res = await fetch(‘https://api.anthropic.com/v1/messages’, {
+method:‘POST’,
+headers:{‘Content-Type’:‘application/json’},
+body: JSON.stringify({
+model:‘claude-sonnet-4-20250514’,
+max_tokens:1000,
+system: SYS,
+messages: chatHistory
+})
+});
+const data = await res.json();
+const text = data.content?.[0]?.text || “Sorry, something went wrong. Please try again or call us at +1 (800) 795-2460.”;
+removeTyping();
+chatHistory.push({role:‘assistant’,content:text});
+addBot(text);
+} catch(err) {
+removeTyping();
+addBot(“I’m having a connection issue right now. Please call us at **+1 (800) 795-2460** or email **quotes@swiftcargo.com** for immediate help.”);
+}
+botBusy = false;
+document.getElementById(‘sendBtn’).disabled = false;
+document.getElementById(‘chatInput’).focus();
+}
+
+/* ═══════════ SCROLL REVEAL ═══════════ */
+const obs = new IntersectionObserver((entries) => {
+entries.forEach((e,i) => {
+if (e.isIntersecting) {
+setTimeout(() => e.target.classList.add(‘visible’), i*80);
+obs.unobserve(e.target);
+}
+});
+}, {threshold:0.08});
+document.querySelectorAll(’.reveal’).forEach(el => obs.observe(el));
+
+/* ═══════════ FORM ═══════════ */
+function handleSubmit() {
+const btn = document.querySelector(’.form-submit’);
+btn.textContent = ‘✓ Sent! We'll be in touch shortly.’;
+btn.style.background = ‘#22c55e’; btn.style.color = ‘#fff’;
+setTimeout(() => { btn.textContent=‘Send Quote Request →’; btn.style.background=’’; btn.style.color=’’; }, 4000);
+}
+
+/* ═══════════ NAVBAR ═
