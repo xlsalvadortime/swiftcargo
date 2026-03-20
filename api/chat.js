@@ -26,7 +26,6 @@ headers: {
 }
 };
 
-```
 const request = https.request(options, (response) => {
   let data = '';
   response.on('data', (chunk) => { data += chunk; });
@@ -48,7 +47,6 @@ request.on('error', (error) => {
 
 request.write(body);
 request.end();
-```
 
 });
 }
