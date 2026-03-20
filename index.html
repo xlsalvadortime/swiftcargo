@@ -472,10 +472,27 @@ section { padding: 70px 5vw; }
 
 <!-- CHAT LAUNCHER -->
 
-<button class="chat-launcher" onclick="toggleChat()" ontouchend="event.preventDefault();toggleChat();" id="chatLauncher" title="Chat with SwiftBot">
+<div id="chatLauncher" title="Chat with SwiftBot" style="
+  position:fixed; bottom:2rem; right:2rem; z-index:10000;
+  width:60px; height:60px; border-radius:50%;
+  background:#f5a623; cursor:pointer;
+  box-shadow:0 6px 28px rgba(245,166,35,0.45);
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.5rem;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  user-select:none; -webkit-user-select:none;
+">
   <span id="chatIcon">💬</span>
-  <span class="chat-unread" id="chatUnread">1</span>
-</button>
+  <span id="chatUnread" style="
+    position:absolute; top:-2px; right:-2px;
+    width:20px; height:20px; border-radius:50%;
+    background:#ef4444; border:2px solid #0a0f1e;
+    font-size:0.65rem; font-weight:700; color:#fff;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'DM Sans',sans-serif;
+  ">1</span>
+</div>
 
 <!-- CHAT WINDOW -->
 
@@ -613,6 +630,22 @@ setTimeout(() => document.getElementById(‘chatInput’).focus(), 300);
 document.getElementById(‘chatIcon’).textContent = ‘💬’;
 }
 }
+
+// iOS touch handler
+document.addEventListener(‘DOMContentLoaded’, function() {
+var launcher = document.getElementById(‘chatLauncher’);
+if (launcher) {
+launcher.addEventListener(‘touchend’, function(e) {
+e.preventDefault();
+e.stopPropagation();
+toggleChat();
+}, { passive: false });
+launcher.addEventListener(‘click’, function(e) {
+e.preventDefault();
+toggleChat();
+});
+}
+});
 
 function initChat() {
 addBot(“👋 Hey there! I’m **SwiftBot**, SwiftCargo’s AI assistant.\n\nI can help you track shipments, get freight quotes, learn about our services, or connect you with our team. What can I help you with?”);
